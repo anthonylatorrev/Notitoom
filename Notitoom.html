@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notitoom</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;600&family=Caveat:wght@500&family=Merriweather&family=Roboto+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1fb;--card:#fff;--text:#2b2540;--muted:#7a7396;--accent:#7c5cff;--accent2:#ff7eb6;--line:#e6e0f5;--tool:#f0ecfb;--shadow:0 12px 40px rgba(124,92,255,.15);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[data-theme=dark]{--bg:#14121f;--card:#1f1b2e;--text:#ece8fa;--muted:#9a93b8;--accent:#a78bfa;--accent2:#f472b6;--line:#322c47;--tool:#292439;--shadow:0 12px 40px rgba(0,0,0,.5)}
+[data-theme=sepia]{--bg:#f3e9d7;--card:#fdf6e8;--text:#4a3722;--muted:#9a8266;--accent:#b5651d;--accent2:#d98e3f;--line:#e6d6b8;--tool:#f1e3c8;--shadow:0 12px 40px rgba(120,80,30,.18)}
+[data-theme=ocean]{--bg:#e3f2f7;--card:#fff;--text:#12384a;--muted:#5f8798;--accent:#0891b2;--accent2:#14b8a6;--line:#cfe6ee;--tool:#e5f4f8;--shadow:0 12px 40px rgba(8,145,178,.18)}
+[data-theme=forest]{--bg:#e8f1e6;--card:#fbfff9;--text:#1f3a28;--muted:#6a8b72;--accent:#2f8f4e;--accent2:#9acd32;--line:#d3e4d0;--tool:#e6f2e3;--shadow:0 12px 40px rgba(47,143,78,.18)}
+[data-theme=navy]{--bg:#0a1a38;--card:#0f2550;--text:#e4f3ff;--muted:#8fb4d9;--accent:#38bdf8;--accent2:#7dd3fc;--line:#1f4180;--tool:#13306a;--shadow:0 12px 40px rgba(2,12,40,.65)}
+[data-theme=navy] body{background:linear-gradient(160deg,#061126 0%,#0b2a5b 60%,#0e4a8a 100%) fixed}
+[data-theme=navy] #big{background:none;-webkit-text-fill-color:#fff;color:#fff;text-shadow:0 4px 24px rgba(56,189,248,.45)}
+[data-theme=navy] button.t:hover,[data-theme=navy] button.t.on{color:#06142e}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,sans-serif;min-height:100%;transition:background .3s,color .3s}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 48px}
+.themes{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-bottom:8px;font-size:13px;color:var(--muted)}
+.dot{width:26px;height:26px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 1px var(--line);cursor:pointer;transition:transform .15s}
+.dot:hover{transform:scale(1.15)}.dot.on{box-shadow:0 0 0 2px var(--accent)}
+header{text-align:center;padding:20px 0 8px}
+#big{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,9vw,76px);line-height:1.1;margin:0;word-break:break-word;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.titlein{margin:14px auto 0;max-width:420px;display:flex;flex-direction:column;gap:4px;text-align:left}
+.titlein label{font-size:12px;color:var(--muted);padding-left:14px}
+.titlein input{font:inherit;padding:11px 16px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--text);outline:none;transition:border .2s}
+.titlein input:focus{border-color:var(--accent)}
+.card{margin-top:24px;background:var(--card);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--tool);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.grp{display:flex;gap:4px;align-items:center;padding-right:8px;border-right:1px solid var(--line)}
+.grp:last-child{border:0}
+button.t,select{font:inherit;font-size:14px;min-width:36px;height:36px;border:0;border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;padding:0 10px;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+button.t:hover,select:hover{background:var(--accent);color:#fff}
+button.t.on{background:var(--accent);color:#fff}
+select option{background:var(--card);color:var(--text)}
+input[type=color]{width:36px;height:36px;border:0;border-radius:10px;padding:2px;background:var(--card);cursor:pointer}
+#size{min-width:30px;text-align:center;font-size:13px;color:var(--muted)}
+#ed{min-height:420px;padding:28px clamp(16px,5vw,44px);outline:none;font-size:17px;line-height:1.7;font-family:'Poppins',sans-serif}
+#ed:empty:before{content:attr(data-ph);color:var(--muted);pointer-events:none}
+#ed ul,#ed ol{padding-left:28px;margin:6px 0}
+#ed ul.check{list-style:none;padding-left:4px}
+#ed ul.check li{display:flex;align-items:flex-start;gap:10px}
+#ed ul.check input{margin-top:.55em;width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex:none}
+#ed ul.check li.done{color:var(--muted);text-decoration:line-through}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);background:var(--tool)}
+.foot button{border:0;background:none;color:var(--accent);cursor:pointer;font:inherit;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="themes"><span>Tema:</span>
+    <div class="dot" data-t="light" style="background:linear-gradient(135deg,#7c5cff,#ff7eb6)" title="Claro"></div>
+    <div class="dot" data-t="dark" style="background:#1f1b2e" title="Oscuro"></div>
+    <div class="dot" data-t="sepia" style="background:#b5651d" title="Sepia"></div>
+    <div class="dot" data-t="ocean" style="background:#0891b2" title="Océano"></div>
+    <div class="dot" data-t="forest" style="background:#2f8f4e" title="Bosque"></div>
+    <div class="dot" data-t="navy" style="background:linear-gradient(135deg,#0b2a5b 45%,#38bdf8)" title="Azul noche"></div>
+  </div>
+  <header>
+    <h1 id="big">Mis Notas</h1>
+    <div class="titlein"><label for="ti">✏️ Cambia el título de arriba</label><input id="ti" maxlength="60" placeholder="Escribe aquí tu título…"></div>
+  </header>
+
+  <div class="card">
+    <div class="bar" id="bar">
+      <div class="grp">
+        <button class="t" data-c="bold" title="Negrita"><b>N</b></button>
+        <button class="t" data-c="italic" title="Cursiva"><i>K</i></button>
+        <button class="t" data-c="underline" title="Subrayado"><u>S</u></button>
+        <button class="t" data-c="strikeThrough" title="Tachado"><s>T</s></button>
+      </div>
+      <div class="grp">
+        <button class="t" id="dec" title="Disminuir letra">A−</button><span id="size">3</span><button class="t" id="inc" title="Aumentar letra">A+</button>
+        <select id="font" title="Fuente">
+          <option value="Poppins">Poppins</option><option value="Playfair Display">Playfair</option><option value="Merriweather">Merriweather</option><option value="Caveat">Caveat (manuscrita)</option><option value="Roboto Mono">Roboto Mono</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option>
+        </select>
+      </div>
+      <div class="grp">
+        <button class="t" data-c="insertUnorderedList" title="Viñetas">• Lista</button>
+        <button class="t" data-c="insertOrderedList" title="Numeración">1. Lista</button>
+        <button class="t" id="chk" title="Checklist">☑ Checklist</button>
+      </div>
+      <div class="grp">
+        <button class="t" data-c="justifyLeft" title="Izquierda">⬅</button>
+        <button class="t" data-c="justifyCenter" title="Centro">↔</button>
+        <button class="t" data-c="justifyRight" title="Derecha">➡</button>
+      </div>
+      <div class="grp">
+        <input type="color" id="col" value="#7c5cff" title="Color de texto">
+        <button class="t" data-c="removeFormat" title="Quitar formato">🧹</button>
+        <button class="t" data-c="undo" title="Deshacer">↶</button>
+        <button class="t" data-c="redo" title="Rehacer">↷</button>
+      </div>
+    </div>
+    <div id="ed" contenteditable="true" spellcheck="true" data-ph="Empieza a escribir tus notas aquí…"></div>
+    <div class="foot"><span id="cnt">0 palabras</span><span id="sv">Guardado automáticamente</span><button id="clr">Borrar todo</button></div>
+  </div>
+</div>
+<script>
+const $=s=>document.querySelector(s),ed=$('#ed'),big=$('#big'),ti=$('#ti');
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+// Tema
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);document.querySelectorAll('.dot').forEach(d=>d.classList.toggle('on',d.dataset.t===t));store.set('nb-theme',t)}
+document.querySelectorAll('.dot').forEach(d=>d.onclick=()=>setTheme(d.dataset.t));
+setTheme(store.get('nb-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+// Título
+function setTitle(v){big.textContent=v.trim()||'Mis Notas';store.set('nb-title',v)}
+ti.oninput=()=>setTitle(ti.value);
+const st=store.get('nb-title');if(st){ti.value=st;setTitle(st)}
+// Comandos
+const cmd=(c,v)=>{ed.focus();document.execCommand(c,false,v||null);upd()};
+document.querySelectorAll('[data-c]').forEach(b=>{b.onmousedown=e=>e.preventDefault();b.onclick=()=>cmd(b.dataset.c)});
+document.querySelectorAll('button.t').forEach(b=>b.onmousedown=e=>e.preventDefault());
+$('#col').oninput=e=>cmd('foreColor',e.target.value);
+$('#font').onchange=e=>cmd('fontName',e.target.value);
+let sz=3;
+function step(n){sz=Math.min(7,Math.max(1,sz+n));$('#size').textContent=sz;cmd('fontSize',sz)}
+$('#inc').onclick=()=>step(1);$('#dec').onclick=()=>step(-1);
+// Checklist
+$('#chk').onclick=()=>{ed.focus();document.execCommand('insertUnorderedList');
+  const s=getSelection();let n=s.anchorNode;while(n&&n!==ed&&n.nodeName!=='UL')n=n.parentNode;
+  if(n&&n.nodeName==='UL')n.classList.toggle('check');fixChecks();upd()};
+function fixChecks(){
+  const s=getSelection();let cur=null;
+  if(s.rangeCount&&ed.contains(s.anchorNode)){let n=s.anchorNode;while(n&&n!==ed&&n.nodeName!=='LI')n=n.parentNode;if(n&&n!==ed)cur=n}
+  ed.querySelectorAll('ul.check li').forEach(li=>{
+  if(!li.querySelector(':scope>input')){const i=document.createElement('input');i.type='checkbox';i.contentEditable='false';li.insertBefore(i,li.firstChild);li.classList.remove('done');
+    if(li===cur){const r=document.createRange();r.setStartAfter(i);r.collapse(true);s.removeAllRanges();s.addRange(r)}}});
+  ed.querySelectorAll('ul:not(.check) li>input[type=checkbox]').forEach(i=>i.remove())}
+ed.addEventListener('click',e=>{if(e.target.matches('ul.check input')){const c=e.target;c.toggleAttribute('checked',c.checked);c.closest('li').classList.toggle('done',c.checked);upd()}});
+// Guardar
+function upd(){fixChecks();store.set('nb-body',ed.innerHTML);const w=ed.innerText.trim().split(/\s+/).filter(Boolean).length;$('#cnt').textContent=w+(w===1?' palabra':' palabras');$('#sv').textContent='Guardado ✓'}
+ed.addEventListener('input',upd);
+function syncBar(){
+  const s=getSelection();if(!s.rangeCount||!ed.contains(s.anchorNode))return;
+  let n=s.anchorNode;while(n&&n!==ed&&n.nodeName!=='UL')n=n.parentNode;
+  const inCheck=!!(n&&n!==ed&&n.classList&&n.classList.contains('check'));
+  document.querySelectorAll('[data-c]').forEach(b=>{const c=b.dataset.c;if(['undo','redo','removeFormat'].includes(c))return;
+    let on=false;try{on=document.queryCommandState(c)}catch(e){}
+    if(c==='insertUnorderedList'&&inCheck)on=false;
+    b.classList.toggle('on',on)});
+  $('#chk').classList.toggle('on',inCheck);
+  try{const f=(document.queryCommandValue('fontName')||'').replace(/["']/g,'');const sel=$('#font');if([...sel.options].some(o=>o.value===f))sel.value=f;
+    const v=parseInt(document.queryCommandValue('fontSize'),10);if(v>=1&&v<=7){sz=v;$('#size').textContent=v}}catch(e){}
+}
+document.addEventListener('selectionchange',syncBar);
+ed.addEventListener('mouseup',syncBar);ed.addEventListener('keyup',syncBar);
+$('#clr').onclick=()=>{if(confirm('¿Borrar todas las notas?')){ed.innerHTML='';upd()}};
+ed.innerHTML=store.get('nb-body')||'<div><b>¡Bienvenido!</b> Prueba las herramientas de arriba:</div><ul class="check"><li><input type="checkbox" contenteditable="false">Escribir mi primera nota</li><li><input type="checkbox" contenteditable="false">Cambiar el tema de la página</li></ul>';
+upd();
+</script>
+</body>
+</html>
